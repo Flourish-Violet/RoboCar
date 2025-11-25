@@ -4,9 +4,9 @@
 
 #ifndef ROBOCAR_PS2_H
 #define ROBOCAR_PS2_H
+#include "main.h"
 #include "FreeRTOS.h"
 #include "task.h"
-#include "main.h"
 #include "cmsis_os.h"
 #include "math.h"
 
