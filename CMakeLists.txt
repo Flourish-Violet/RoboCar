@@ -15,6 +15,10 @@ set(CMAKE_TRY_COMPILE_TARGET_TYPE STATIC_LIBRARY)
 
 # project settings
 project(RoboCar C CXX ASM)
+if(NOT CMAKE_BUILD_TYPE)
+  set(CMAKE_BUILD_TYPE Debug CACHE STRING "Build type" FORCE)
+endif()
+
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_C_STANDARD 11)
 
@@ -48,6 +52,7 @@ else ()
     message(STATUS "Minimal optimization, debug info included")
     add_compile_options(-Og -g)
 endif ()
+add_compile_options(-O0 -g)
 
 include_directories(Core/Inc Drivers/STM32F1xx_HAL_Driver/Inc Drivers/STM32F1xx_HAL_Driver/Inc/Legacy Middlewares/Third_Party/FreeRTOS/Source/include Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM3 Drivers/CMSIS/Device/ST/STM32F1xx/Include Drivers/CMSIS/Include
                     /Userlib)

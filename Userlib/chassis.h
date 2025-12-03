@@ -7,11 +7,11 @@
 
 #include "cmsis_os.h"
 //单位 米
-#define wheel_position_X 0.015f
-#define wheel_position_Y 0.01f
+#define wheel_position_X 0.09494f
+#define wheel_position_Y 0.0362f
 #define wheel_Radius 0.03f
-
-#define controller_dead_zone 0
-
+//0.0362
+#define controller_dead_zone 10
+void setChassisSpeed(float vx,float vy,float omega,float* receiver);
 void Movement_Inverse_Kinematics(float vx,float vy,float omega,float* receiver);
 #endif //ROBOCAR_CHASSIS_H

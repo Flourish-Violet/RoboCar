@@ -144,7 +144,7 @@ void PS2_Get(void)    //接受ps2数据
 	HAL_SPI_TransmitReceive(&hspi1,&cmd[1],&PS2data[1],1,10); // 发送0x42，接受0x01（PS2表示开始通信）
 	delay_us(16);
 
-	HAL_SPI_TransmitReceive(&hspi1,&cmd[2],&PS2data[2],1,0xffff); // 发送0x00，接受ID（红绿灯模式）
+	HAL_SPI_TransmitReceive(&hspi1,&cmd[2],&PS2data[2],1,10); // 发送0x00，接受ID（红绿灯模式）
 	delay_us(16);
 
 	for(i = 3;i <9;i++)

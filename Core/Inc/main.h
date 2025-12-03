@@ -59,6 +59,10 @@ void Error_Handler(void);
 /* Private defines -----------------------------------------------------------*/
 #define CS_Pin GPIO_PIN_4
 #define CS_GPIO_Port GPIOA
+#define MOTOR4_A_Pin GPIO_PIN_0
+#define MOTOR4_A_GPIO_Port GPIOB
+#define MOTOR4_B_Pin GPIO_PIN_1
+#define MOTOR4_B_GPIO_Port GPIOB
 #define MOTOR1_A_Pin GPIO_PIN_12
 #define MOTOR1_A_GPIO_Port GPIOB
 #define MOTOR1_B_Pin GPIO_PIN_13
@@ -67,6 +71,12 @@ void Error_Handler(void);
 #define MOTOR2_A_GPIO_Port GPIOB
 #define MOTOR2_B_Pin GPIO_PIN_15
 #define MOTOR2_B_GPIO_Port GPIOB
+#define MOTOR3_A_Pin GPIO_PIN_8
+#define MOTOR3_A_GPIO_Port GPIOA
+#define MOTOR3_B_Pin GPIO_PIN_9
+#define MOTOR3_B_GPIO_Port GPIOA
+#define GUN_Pin GPIO_PIN_6
+#define GUN_GPIO_Port GPIOB
 
 /* USER CODE BEGIN Private defines */
 

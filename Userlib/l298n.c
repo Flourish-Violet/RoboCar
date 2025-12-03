@@ -20,7 +20,7 @@ void tt_motor_Init(TT_MOTOR* motor,
     HAL_GPIO_WritePin(motor->IN1_PORT,motor->IN1_PIN,GPIO_PIN_SET);
     HAL_GPIO_WritePin(motor->IN2_PORT,motor->IN2_PIN,GPIO_PIN_RESET);
 }
-void setSpeed(TT_MOTOR* motor,int8_t speed )
+void setSpeed(TT_MOTOR* motor,int16_t speed )
 {
     //限幅
     if (speed > MAX_SPEED)
