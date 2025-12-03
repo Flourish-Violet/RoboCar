@@ -95,7 +95,6 @@ void controller_task()
                 }else
                 {
                     HAL_GPIO_WritePin(GPIOB,GPIO_PIN_6,GPIO_PIN_RESET);
-                    PS2_Vibration(0x00, 0x00);
                 }
                 //设置速度
                 setChassisSpeed(vx,vy,omega,motor_vel);

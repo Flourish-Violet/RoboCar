@@ -50,7 +50,7 @@
 osThreadId defaultTaskHandle;
 osThreadId chasisHandle;
 osThreadId controllerHandle;
-osThreadId gimbalHandle;
+osThreadId machineGunHandle;
 
 /* Private function prototypes -----------------------------------------------*/
 /* USER CODE BEGIN FunctionPrototypes */
@@ -60,7 +60,7 @@ osThreadId gimbalHandle;
 void StartDefaultTask(void const * argument);
 extern void chassis_task(void const * argument);
 extern void controller_task(void const * argument);
-extern void gimbal_task(void const * argument);
+extern void machineGun_task(void const * argument);
 
 void MX_FREERTOS_Init(void); /* (MISRA C 2004 rule 8.1) */
 
@@ -119,9 +119,9 @@ void MX_FREERTOS_Init(void) {
   osThreadDef(controller, controller_task, osPriorityIdle, 0, 128);
   controllerHandle = osThreadCreate(osThread(controller), NULL);
 
-  /* definition and creation of gimbal */
-  osThreadDef(gimbal, gimbal_task, osPriorityIdle, 0, 128);
-  gimbalHandle = osThreadCreate(osThread(gimbal), NULL);
+  /* definition and creation of machineGun */
+  osThreadDef(machineGun, machineGun_task, osPriorityIdle, 0, 128);
+  machineGunHandle = osThreadCreate(osThread(machineGun), NULL);
 
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */
