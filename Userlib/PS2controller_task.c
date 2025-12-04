@@ -12,6 +12,8 @@ float vx,vy,omega;
 uint8_t is_RoboCar_turn_ON = 0; //开机标识
 void controller_task()
 {
+    //激光初始化
+    HAL_GPIO_WritePin(GPIOB,GPIO_PIN_7,GPIO_PIN_RESET);
     //云台初始化
     gimbal_init();
     //水枪初始化
@@ -37,7 +39,7 @@ void controller_task()
             if (ps2_Instance.START) is_RoboCar_turn_ON = 1;
             if (is_RoboCar_turn_ON)
             {
-                //地盘控制
+                //地盘控制 前后左右
                 if (ps2_Instance.LX>controller_dead_zone)
                 {
                     vy = 1;
@@ -95,6 +97,15 @@ void controller_task()
                 }else
                 {
                     HAL_GPIO_WritePin(GPIOB,GPIO_PIN_6,GPIO_PIN_RESET);
+                }
+                //激光
+                if (ps2_Instance.L2)
+                {
+                    HAL_GPIO_WritePin(GPIOB,GPIO_PIN_7,GPIO_PIN_SET);
+                    PS2_Vibration(0x01, 0x80);
+                }else
+                {
+                    HAL_GPIO_WritePin(GPIOB,GPIO_PIN_7,GPIO_PIN_RESET);
                 }
                 //设置速度
                 setChassisSpeed(vx,vy,omega,motor_vel);

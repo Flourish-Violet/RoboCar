@@ -75,8 +75,12 @@ void Error_Handler(void);
 #define MOTOR3_A_GPIO_Port GPIOA
 #define MOTOR3_B_Pin GPIO_PIN_9
 #define MOTOR3_B_GPIO_Port GPIOA
+#define LIFT_Pin GPIO_PIN_11
+#define LIFT_GPIO_Port GPIOA
 #define GUN_Pin GPIO_PIN_6
 #define GUN_GPIO_Port GPIOB
+#define RAY_Pin GPIO_PIN_7
+#define RAY_GPIO_Port GPIOB
 
 /* USER CODE BEGIN Private defines */
 
