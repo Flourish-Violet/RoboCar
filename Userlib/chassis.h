@@ -7,8 +7,8 @@
 
 #include "cmsis_os.h"
 //单位 米
-#define wheel_position_X 0.09494f
-#define wheel_position_Y 0.0362f
+#define wheel_position_X 0.0855f
+#define wheel_position_Y 0.07f
 #define wheel_Radius 0.03f
 //0.0362
 #define controller_dead_zone 10

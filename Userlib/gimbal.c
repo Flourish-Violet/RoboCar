@@ -6,7 +6,7 @@
 #include "cmsis_os.h"
 #include "PS2.h"
 extern ps2 ps2_Instance;
-extern TIM_HandleTypeDef htim3;
+extern TIM_HandleTypeDef htim3,htim1;
 int16_t pwm1 = 1500;
 int16_t pwm2 = 1500;
 void gimbal_init()
@@ -37,4 +37,17 @@ void setGimbal(int16_t pitch,int16_t yaw)
         pwm2 = pitch_MIN;
     __HAL_TIM_SET_COMPARE(&htim3,TIM_CHANNEL_1,pwm1);
     __HAL_TIM_SET_COMPARE(&htim3,TIM_CHANNEL_2,pwm2);
+}
+
+void setLift(int16_t lift_x)
+{
+    if (lift_x > lift_max)
+    {
+        lift_x = lift_max;
+    }else if(lift_x < lift_min)
+    {
+        lift_x = lift_min;
+    }
+
+    __HAL_TIM_SET_COMPARE(&htim1,TIM_CHANNEL_4,lift_x);
 }
