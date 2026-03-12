@@ -5,10 +5,12 @@
 #include "chassis.h"
 #include "gimbal.h"
 #include "tim.h"
+#include "ros_cmd.h"
 #define fire_param 1422
 ps2 ps2_Instance;
 extern float motor_vel[4];
 extern uint16_t K;
+extern volatile uint8_t ros_mode_active;
 uint16_t pre_K,shot_speed = 68;
 float vx,vy,omega;
 uint8_t is_RoboCar_turn_ON = 0; //开机标识
@@ -137,8 +139,11 @@ void controller_task()
                     liftrat = 1500;
                 }
 
-                //设置速度
-                setChassisSpeed(vx,vy,omega,motor_vel);
+                //设置速度 – yield to ROS when it is active
+                if (!ros_mode_active)
+                {
+                    setChassisSpeed(vx,vy,omega,motor_vel);
+                }
                 //设置云台
 
                 if (ps2_Instance.square)

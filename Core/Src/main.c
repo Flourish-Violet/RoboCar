@@ -25,7 +25,7 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+#include "usart.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -95,7 +95,7 @@ int main(void)
   MX_TIM3_Init();
   MX_TIM1_Init();
   /* USER CODE BEGIN 2 */
-
+  MX_USART1_UART_Init();
   /* USER CODE END 2 */
 
   /* Call init function for freertos objects (in cmsis_os2.c) */

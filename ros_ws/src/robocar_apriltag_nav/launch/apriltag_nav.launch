@@ -1,0 +1,113 @@
+<!-- apriltag_nav.launch
+     ====================
+     启动 RoboCar AprilTag 导航全栈。
+
+     启动的节点
+     ~~~~~~~~~~
+       1. usb_cam          – USB 摄像头驱动
+       2. apriltag_ros     – AprilTag 36h11 族检测
+       3. apriltag_navigator – PD 导航控制器
+       4. serial_bridge    – 将 /cmd_vel 通过串口转发给 STM32
+
+     关键参数
+     ~~~~~~~~
+       serial_port     /dev/ttyUSB0    USB–UART 转接器（连接至 STM32）
+       camera_device   /dev/video0     摄像头设备节点
+       target_ids      [0]             目标标签 ID 的 YAML 列表
+       target_distance 0.30            停靠距离 [m]
+-->
+<launch>
+  <!-- ============================================================ -->
+  <!-- 启动参数                                                     -->
+  <!-- ============================================================ -->
+  <arg name="serial_port"       default="/dev/ttyUSB0"/>
+  <arg name="camera_device"     default="/dev/video0"/>
+  <arg name="target_ids"        default="[0, 1, 2, 3]"/>
+  <arg name="target_distance"   default="0.30"/>
+
+  <!-- ============================================================ -->
+  <!-- 1. 摄像头驱动（usb_cam）                                    -->
+  <!-- ============================================================ -->
+  <node name="usb_cam" pkg="usb_cam" type="usb_cam_node" output="screen">
+    <param name="video_device"         value="$(arg camera_device)"/>
+    <param name="image_width"          value="640"/>
+    <param name="image_height"         value="480"/>
+    <param name="pixel_format"         value="yuyv"/>
+    <param name="camera_frame_id"      value="camera_optical_frame"/>
+    <param name="io_method"            value="mmap"/>
+    <!-- 在此加载相机标定文件 -->
+    <!-- <param name="camera_info_url" value="file://$(find robocar_apriltag_nav)/config/camera.yaml"/> -->
+  </node>
+
+  <!-- ============================================================ -->
+  <!-- 2. AprilTag 检测（apriltag_ros 连续检测器）                 -->
+  <!-- ============================================================ -->
+  <node name="apriltag_ros_continuous_node"
+        pkg="apriltag_ros"
+        type="apriltag_ros_continuous_node"
+        clear_params="true"
+        output="screen"
+        ns="apriltag">
+
+    <!-- 将摄像头话题重映射到 usb_cam 发布的话题 -->
+    <remap from="image_rect"       to="/usb_cam/image_raw"/>
+    <remap from="camera_info"      to="/usb_cam/camera_info"/>
+
+    <!-- 将检测结果发布到全局话题，供导航节点订阅 -->
+    <remap from="tag_detections"   to="/tag_detections"/>
+
+    <!-- AprilTag 36h11 族 – 匹配标准 6×6 标签 -->
+    <param name="publish_tag_detections_image" value="true"/>
+    <rosparam>
+      tag_family:     36h11
+      tag_border:     1
+      tag_threads:    2
+      tag_decimate:   1.0
+      tag_blur:       0.0
+      tag_refine_edges: 1
+      tag_debug:      0
+      max_hamming_dist: 2
+      publish_tf:     false
+    </rosparam>
+
+    <!-- 独立标签定义（与 config/tags.yaml 保持一致） -->
+    <rosparam param="standalone_tags">
+      [
+        {id: 0, size: 0.1},
+        {id: 1, size: 0.1},
+        {id: 2, size: 0.1},
+        {id: 3, size: 0.1}
+      ]
+    </rosparam>
+  </node>
+
+  <!-- ============================================================ -->
+  <!-- 3. AprilTag 导航控制器                                       -->
+  <!-- ============================================================ -->
+  <node name="apriltag_navigator"
+        pkg="robocar_apriltag_nav"
+        type="apriltag_navigator.py"
+        output="screen">
+
+    <!-- 从 YAML 文件加载导航参数 -->
+    <rosparam file="$(find robocar_apriltag_nav)/config/nav_params.yaml"
+              command="load"
+              ns="apriltag_navigator"/>
+
+    <!-- 通过启动参数覆盖特定参数 -->
+    <param name="target_tag_ids"  value="$(arg target_ids)"/>
+    <param name="target_distance" value="$(arg target_distance)"/>
+  </node>
+
+  <!-- ============================================================ -->
+  <!-- 4. 串口桥接节点（cmd_vel → STM32 UART）                    -->
+  <!-- ============================================================ -->
+  <node name="serial_bridge"
+        pkg="robocar_apriltag_nav"
+        type="serial_bridge.py"
+        output="screen">
+    <param name="port"     value="$(arg serial_port)"/>
+    <param name="baudrate" value="115200"/>
+  </node>
+
+</launch>

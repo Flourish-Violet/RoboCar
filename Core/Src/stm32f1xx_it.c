@@ -22,6 +22,8 @@
 #include "stm32f1xx_it.h"
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
+#include "usart.h"
+#include "ros_cmd.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -174,5 +176,24 @@ void TIM4_IRQHandler(void)
 }
 
 /* USER CODE BEGIN 1 */
+
+/**
+  * @brief  USART1 global interrupt handler.
+  */
+void USART1_IRQHandler(void)
+{
+    HAL_UART_IRQHandler(&huart1);
+}
+
+/**
+  * @brief  UART RX-complete callback – called by HAL after each byte arrives.
+  */
+void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
+{
+    if (huart->Instance == USART1)
+    {
+        ros_uart_rx_callback();
+    }
+}
 
 /* USER CODE END 1 */
