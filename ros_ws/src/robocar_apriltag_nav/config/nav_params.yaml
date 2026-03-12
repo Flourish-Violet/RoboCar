@@ -1,0 +1,37 @@
+# Navigation control parameters
+navigation:
+  # PD gains for angular correction (controls rotation toward the tag)
+  kp_angular: 1.5       # proportional gain  [rad/s per meter of lateral error]
+  kd_angular: 0.1       # derivative gain
+
+  # PD gains for forward approach (controls forward speed toward the tag)
+  kp_linear: 0.6        # proportional gain  [m/s per meter of distance error]
+  kd_linear: 0.05       # derivative gain
+
+  # Target stand-off distance from the tag [meters]
+  target_distance: 0.30
+
+  # Robot is considered "arrived" when distance error is below this threshold
+  arrival_threshold: 0.05   # [meters]
+
+  # Maximum allowed velocities (safety limits)
+  max_linear_vel: 0.5       # [m/s]
+  max_angular_vel: 1.2      # [rad/s]
+
+  # Rotation-only phase: align before moving forward when lateral offset > threshold
+  align_threshold: 0.15   # [meters]
+
+  # Search rotation speed used when no tag is visible
+  search_angular_vel: 0.4   # [rad/s]
+
+  # Publish rate for velocity commands [Hz]
+  cmd_rate: 20
+
+# Target AprilTag IDs (one per destination area).
+# The navigator will attempt to reach the *first* visible tag in this list.
+target_tag_ids: [0, 1, 2, 3]
+
+# Serial port connected to the STM32 (can be overridden via launch argument)
+serial:
+  port: /dev/ttyUSB0
+  baudrate: 115200

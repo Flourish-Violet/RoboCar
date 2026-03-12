@@ -25,7 +25,7 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+#include "ros_cmd.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -51,6 +51,7 @@ osThreadId defaultTaskHandle;
 osThreadId chasisHandle;
 osThreadId controllerHandle;
 osThreadId machineGunHandle;
+osThreadId rosUartHandle;
 
 /* Private function prototypes -----------------------------------------------*/
 /* USER CODE BEGIN FunctionPrototypes */
@@ -61,6 +62,7 @@ void StartDefaultTask(void const * argument);
 extern void chassis_task(void const * argument);
 extern void controller_task(void const * argument);
 extern void machineGun_task(void const * argument);
+extern void ros_uart_task(void const * argument);
 
 void MX_FREERTOS_Init(void); /* (MISRA C 2004 rule 8.1) */
 
@@ -122,6 +124,10 @@ void MX_FREERTOS_Init(void) {
   /* definition and creation of machineGun */
   osThreadDef(machineGun, machineGun_task, osPriorityIdle, 0, 128);
   machineGunHandle = osThreadCreate(osThread(machineGun), NULL);
+
+  /* definition and creation of rosUart – receives velocity commands from ROS */
+  osThreadDef(rosUart, ros_uart_task, osPriorityNormal, 0, 256);
+  rosUartHandle = osThreadCreate(osThread(rosUart), NULL);
 
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */

@@ -1,0 +1,19 @@
+# AprilTag target area definitions
+# Each entry maps a tag ID to a human-readable area name and description.
+# Extend this list to add more areas.
+areas:
+  - tag_id: 0
+    name: "Area A"
+    description: "Loading zone at the front of the field"
+
+  - tag_id: 1
+    name: "Area B"
+    description: "Repair station on the left side"
+
+  - tag_id: 2
+    name: "Area C"
+    description: "Scoring zone at the far end"
+
+  - tag_id: 3
+    name: "Area D"
+    description: "Starting position / home base"

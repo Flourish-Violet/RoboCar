@@ -1,0 +1,113 @@
+<!-- apriltag_nav.launch
+     ====================
+     Launches the full AprilTag navigation stack for the RoboCar.
+
+     Nodes started
+     ~~~~~~~~~~~~~
+       1. usb_cam          – USB camera driver
+       2. apriltag_ros     – AprilTag 36h11 family detection
+       3. apriltag_navigator – PD navigation controller
+       4. serial_bridge    – Relays /cmd_vel to the STM32 over serial
+
+     Key arguments
+     ~~~~~~~~~~~~~
+       serial_port   /dev/ttyUSB0          USB–UART adapter to STM32
+       camera_device /dev/video0           Camera device node
+       target_ids    [0]                   Comma-free YAML list of tag IDs
+       target_distance 0.30               Stand-off distance [m]
+-->
+<launch>
+  <!-- ============================================================ -->
+  <!-- Launch arguments                                             -->
+  <!-- ============================================================ -->
+  <arg name="serial_port"       default="/dev/ttyUSB0"/>
+  <arg name="camera_device"     default="/dev/video0"/>
+  <arg name="target_ids"        default="[0, 1, 2, 3]"/>
+  <arg name="target_distance"   default="0.30"/>
+
+  <!-- ============================================================ -->
+  <!-- 1. Camera driver (usb_cam)                                   -->
+  <!-- ============================================================ -->
+  <node name="usb_cam" pkg="usb_cam" type="usb_cam_node" output="screen">
+    <param name="video_device"         value="$(arg camera_device)"/>
+    <param name="image_width"          value="640"/>
+    <param name="image_height"         value="480"/>
+    <param name="pixel_format"         value="yuyv"/>
+    <param name="camera_frame_id"      value="camera_optical_frame"/>
+    <param name="io_method"            value="mmap"/>
+    <!-- Load your camera calibration here -->
+    <!-- <param name="camera_info_url" value="file://$(find robocar_apriltag_nav)/config/camera.yaml"/> -->
+  </node>
+
+  <!-- ============================================================ -->
+  <!-- 2. AprilTag detection (apriltag_ros continuous detector)     -->
+  <!-- ============================================================ -->
+  <node name="apriltag_ros_continuous_node"
+        pkg="apriltag_ros"
+        type="apriltag_ros_continuous_node"
+        clear_params="true"
+        output="screen"
+        ns="apriltag">
+
+    <!-- Remap camera topics from usb_cam -->
+    <remap from="image_rect"       to="/usb_cam/image_raw"/>
+    <remap from="camera_info"      to="/usb_cam/camera_info"/>
+
+    <!-- Publish detections globally so the navigator can see them -->
+    <remap from="tag_detections"   to="/tag_detections"/>
+
+    <!-- AprilTag 36h11 family – matches standard 6×6 tags -->
+    <param name="publish_tag_detections_image" value="true"/>
+    <rosparam>
+      tag_family:     36h11
+      tag_border:     1
+      tag_threads:    2
+      tag_decimate:   1.0
+      tag_blur:       0.0
+      tag_refine_edges: 1
+      tag_debug:      0
+      max_hamming_dist: 2
+      publish_tf:     false
+    </rosparam>
+
+    <!-- Standalone tag definitions (matches config/tags.yaml) -->
+    <rosparam param="standalone_tags">
+      [
+        {id: 0, size: 0.1},
+        {id: 1, size: 0.1},
+        {id: 2, size: 0.1},
+        {id: 3, size: 0.1}
+      ]
+    </rosparam>
+  </node>
+
+  <!-- ============================================================ -->
+  <!-- 3. AprilTag navigation controller                            -->
+  <!-- ============================================================ -->
+  <node name="apriltag_navigator"
+        pkg="robocar_apriltag_nav"
+        type="apriltag_navigator.py"
+        output="screen">
+
+    <!-- Load navigation parameters from YAML -->
+    <rosparam file="$(find robocar_apriltag_nav)/config/nav_params.yaml"
+              command="load"
+              ns="apriltag_navigator"/>
+
+    <!-- Override specific parameters via arguments -->
+    <param name="target_tag_ids"  value="$(arg target_ids)"/>
+    <param name="target_distance" value="$(arg target_distance)"/>
+  </node>
+
+  <!-- ============================================================ -->
+  <!-- 4. Serial bridge (cmd_vel → STM32 UART)                     -->
+  <!-- ============================================================ -->
+  <node name="serial_bridge"
+        pkg="robocar_apriltag_nav"
+        type="serial_bridge.py"
+        output="screen">
+    <param name="port"     value="$(arg serial_port)"/>
+    <param name="baudrate" value="115200"/>
+  </node>
+
+</launch>
