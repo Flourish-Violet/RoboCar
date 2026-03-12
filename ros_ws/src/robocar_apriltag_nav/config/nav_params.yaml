@@ -1,37 +1,37 @@
-# Navigation control parameters
+# 导航控制参数
 navigation:
-  # PD gains for angular correction (controls rotation toward the tag)
-  kp_angular: 1.5       # proportional gain  [rad/s per meter of lateral error]
-  kd_angular: 0.1       # derivative gain
+  # 角速度 PD 增益（控制朝向标签的旋转修正）
+  kp_angular: 1.5       # 比例增益  [rad/s / m 横向误差]
+  kd_angular: 0.1       # 微分增益
 
-  # PD gains for forward approach (controls forward speed toward the tag)
-  kp_linear: 0.6        # proportional gain  [m/s per meter of distance error]
-  kd_linear: 0.05       # derivative gain
+  # 线速度 PD 增益（控制向标签靠近的前进速度）
+  kp_linear: 0.6        # 比例增益  [m/s / m 距离误差]
+  kd_linear: 0.05       # 微分增益
 
-  # Target stand-off distance from the tag [meters]
+  # 目标停靠距离（与标签的距离）[米]
   target_distance: 0.30
 
-  # Robot is considered "arrived" when distance error is below this threshold
-  arrival_threshold: 0.05   # [meters]
+  # 距离误差小于此阈值时认为已到达目标
+  arrival_threshold: 0.05   # [米]
 
-  # Maximum allowed velocities (safety limits)
+  # 最大允许速度（安全限制）
   max_linear_vel: 0.5       # [m/s]
   max_angular_vel: 1.2      # [rad/s]
 
-  # Rotation-only phase: align before moving forward when lateral offset > threshold
-  align_threshold: 0.15   # [meters]
+  # 仅旋转对齐阶段：横向偏移超过此阈值时先原地旋转
+  align_threshold: 0.15   # [米]
 
-  # Search rotation speed used when no tag is visible
+  # 未检测到标签时的搜索旋转速度
   search_angular_vel: 0.4   # [rad/s]
 
-  # Publish rate for velocity commands [Hz]
+  # 速度指令发布频率 [Hz]
   cmd_rate: 20
 
-# Target AprilTag IDs (one per destination area).
-# The navigator will attempt to reach the *first* visible tag in this list.
+# 目标 AprilTag ID 列表（每个目标区域一个）。
+# 导航器将尝试到达此列表中第一个可见的标签。
 target_tag_ids: [0, 1, 2, 3]
 
-# Serial port connected to the STM32 (can be overridden via launch argument)
+# 连接 STM32 的串口（可通过 launch 参数覆盖）
 serial:
   port: /dev/ttyUSB0
   baudrate: 115200

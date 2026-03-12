@@ -2,8 +2,8 @@
 /**
   ******************************************************************************
   * @file    usart.c
-  * @brief   USART1 peripheral initialization for ROS serial communication.
-  *          Uses PA9 (TX) and PA10 (RX) at 115200 8N1.
+  * @brief   USART1 外设初始化，用于与 ROS 主机进行串口通信。
+  *          使用 PA9（TX）和 PA10（RX），波特率 115200，8N1 格式。
   ******************************************************************************
   */
 /* USER CODE END Header */
@@ -14,7 +14,7 @@
 UART_HandleTypeDef huart1;
 
 /**
-  * @brief  Initialize USART1 at 115200 baud, 8N1, with RX interrupt enabled.
+  * @brief  以 115200 波特率、8N1 格式初始化 USART1，并使能接收中断。
   */
 void MX_USART1_UART_Init(void)
 {
@@ -33,7 +33,7 @@ void MX_USART1_UART_Init(void)
 }
 
 /**
-  * @brief  MSP initialization for USART1 (GPIO + clock + NVIC).
+  * @brief  USART1 的 MSP 初始化（GPIO + 时钟 + NVIC）。
   */
 void HAL_UART_MspInit(UART_HandleTypeDef *uartHandle)
 {
@@ -44,26 +44,26 @@ void HAL_UART_MspInit(UART_HandleTypeDef *uartHandle)
         __HAL_RCC_USART1_CLK_ENABLE();
         __HAL_RCC_GPIOA_CLK_ENABLE();
 
-        /* PA9  → USART1 TX (AF push-pull) */
+        /* PA9  → USART1 TX（复用推挽输出） */
         GPIO_InitStruct.Pin   = GPIO_PIN_9;
         GPIO_InitStruct.Mode  = GPIO_MODE_AF_PP;
         GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
         HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
-        /* PA10 → USART1 RX (floating input) */
+        /* PA10 → USART1 RX（浮空输入） */
         GPIO_InitStruct.Pin  = GPIO_PIN_10;
         GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
         GPIO_InitStruct.Pull = GPIO_NOPULL;
         HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
-        /* USART1 interrupt – below FreeRTOS preemption threshold */
+        /* USART1 中断优先级 – 低于 FreeRTOS 最高抢占优先级 */
         HAL_NVIC_SetPriority(USART1_IRQn, 5, 0);
         HAL_NVIC_EnableIRQ(USART1_IRQn);
     }
 }
 
 /**
-  * @brief  MSP de-initialization for USART1.
+  * @brief  USART1 的 MSP 反初始化。
   */
 void HAL_UART_MspDeInit(UART_HandleTypeDef *uartHandle)
 {

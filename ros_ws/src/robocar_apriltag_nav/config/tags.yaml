@@ -1,19 +1,19 @@
-# AprilTag target area definitions
-# Each entry maps a tag ID to a human-readable area name and description.
-# Extend this list to add more areas.
+# AprilTag 目标区域定义
+# 每条记录将标签 ID 映射到人类可读的区域名称和描述。
+# 如需添加更多区域，请在此列表中追加条目。
 areas:
   - tag_id: 0
-    name: "Area A"
-    description: "Loading zone at the front of the field"
+    name: "A 区"
+    description: "场地前方装卸区"
 
   - tag_id: 1
-    name: "Area B"
-    description: "Repair station on the left side"
+    name: "B 区"
+    description: "左侧维修站"
 
   - tag_id: 2
-    name: "Area C"
-    description: "Scoring zone at the far end"
+    name: "C 区"
+    description: "远端得分区"
 
   - tag_id: 3
-    name: "Area D"
-    description: "Starting position / home base"
+    name: "D 区"
+    description: "出发点 / 主基地"

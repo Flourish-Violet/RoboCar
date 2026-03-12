@@ -2,7 +2,7 @@
 /**
   ******************************************************************************
   * @file    usart.h
-  * @brief   USART1 peripheral configuration for ROS serial communication
+  * @brief   USART1 外设配置头文件，用于 ROS 串口通信
   ******************************************************************************
   */
 /* USER CODE END Header */

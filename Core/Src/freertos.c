@@ -125,7 +125,7 @@ void MX_FREERTOS_Init(void) {
   osThreadDef(machineGun, machineGun_task, osPriorityIdle, 0, 128);
   machineGunHandle = osThreadCreate(osThread(machineGun), NULL);
 
-  /* definition and creation of rosUart – receives velocity commands from ROS */
+  /* rosUart 任务的定义和创建 – 从 ROS 接收速度指令 */
   osThreadDef(rosUart, ros_uart_task, osPriorityNormal, 0, 256);
   rosUartHandle = osThreadCreate(osThread(rosUart), NULL);
 
